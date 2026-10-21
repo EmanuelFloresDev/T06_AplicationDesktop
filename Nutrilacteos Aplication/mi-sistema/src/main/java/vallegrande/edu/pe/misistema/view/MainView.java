@@ -1,7 +1,5 @@
-
 package vallegrande.edu.pe.misistema.view;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 import javafx.collections.FXCollections;
@@ -17,17 +15,17 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
 import vallegrande.edu.pe.misistema.model.Usuario;
 
 public class MainView extends BorderPane {
 
-    // Botones del menú
     private Button btnInicio;
     private Button btnUsuarios;
+    private Button btnProductos;
+    private Button btnVentas;
 
-    // Campos para visualizar la consulta seleccionada
     private TextField txtNombreOrganizacion;
+    private TextField txtTipoDocumento;
     private TextField txtIdentificacionFiscal;
     private TextField txtTelefono;
     private TextField txtDireccion;
@@ -35,12 +33,10 @@ public class MainView extends BorderPane {
     private TextField txtCorreo;
     private TextField txtDescripcion;
 
-    // Botones de gestión
     private Button btnRegistrar;
     private Button btnActualizar;
     private Button btnEliminar;
 
-    // Tabla de consultas
     private TableView<Usuario> tablaUsuarios;
 
     public MainView() {
@@ -50,7 +46,6 @@ public class MainView extends BorderPane {
         mostrarInicio();
     }
 
-    // Menú lateral
     private void crearMenu() {
         VBox menu = new VBox(15);
         menu.setPadding(new Insets(25));
@@ -65,11 +60,15 @@ public class MainView extends BorderPane {
 
         btnInicio = crearBotonMenu("Inicio");
         btnUsuarios = crearBotonMenu("Consultas");
+        btnProductos = crearBotonMenu("Productos");
+        btnVentas = crearBotonMenu("Ventas");
 
         menu.getChildren().addAll(
                 titulo,
                 btnInicio,
-                btnUsuarios
+                btnUsuarios,
+                btnProductos,
+                btnVentas
         );
 
         menu.setStyle("-fx-background-color: #063B00;");
@@ -88,7 +87,6 @@ public class MainView extends BorderPane {
         return boton;
     }
 
-    // Pantalla de inicio
     public void mostrarInicio() {
         VBox contenido = new VBox(15);
         contenido.setAlignment(Pos.CENTER);
@@ -101,26 +99,17 @@ public class MainView extends BorderPane {
                         "-fx-text-fill: #063B00;"
         );
 
-        Label texto = new Label(
-                "Administración de consultas de Nutrilácteos"
-        );
-
-        Label descripcion = new Label(
-                "Selecciona Consultas para visualizar los registros."
-        );
-
         contenido.getChildren().addAll(
                 titulo,
-                texto,
-                descripcion
+                new Label("Administración de Nutrilácteos"),
+                new Label("Selecciona un módulo en el menú.")
         );
 
         setCenter(contenido);
     }
 
-    // Pantalla principal de consultas
     public void mostrarUsuarios() {
-        VBox contenido = new VBox(15);
+        VBox contenido = new VBox(12);
         contenido.setPadding(new Insets(20));
 
         Label titulo = new Label("GESTIÓN DE CONSULTAS");
@@ -131,244 +120,155 @@ public class MainView extends BorderPane {
         );
 
         Label subtitulo = new Label(
-                "Selecciona una consulta para ver sus datos y cambiar su estado."
+                "Completa el formulario para registrar una consulta. " +
+                        "Selecciona una fila para editarla o eliminarla."
         );
 
-        // Botones
-        HBox botones = new HBox(10);
+        HBox botones = new HBox(
+                10,
+                btnRegistrar,
+                btnActualizar,
+                btnEliminar
+        );
         botones.setAlignment(Pos.CENTER_LEFT);
-
-        botones.getChildren().add(btnActualizar);
-
-        // Datos de la consulta seleccionada
-        Label tituloDetalle = new Label("DETALLE DE LA CONSULTA");
-        tituloDetalle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
         GridPane formulario = new GridPane();
         formulario.setHgap(12);
-        formulario.setVgap(10);
+        formulario.setVgap(8);
 
         formulario.add(new Label("Organización:"), 0, 0);
         formulario.add(txtNombreOrganizacion, 1, 0);
+        formulario.add(new Label("Tipo de documento:"), 2, 0);
+        formulario.add(txtTipoDocumento, 3, 0);
 
-        formulario.add(new Label("Identificación:"), 2, 0);
-        formulario.add(txtIdentificacionFiscal, 3, 0);
+        formulario.add(new Label("Identificación fiscal:"), 0, 1);
+        formulario.add(txtIdentificacionFiscal, 1, 1);
+        formulario.add(new Label("Teléfono:"), 2, 1);
+        formulario.add(txtTelefono, 3, 1);
 
-        formulario.add(new Label("Teléfono:"), 0, 1);
-        formulario.add(txtTelefono, 1, 1);
+        formulario.add(new Label("Dirección:"), 0, 2);
+        formulario.add(txtDireccion, 1, 2);
+        formulario.add(new Label("Responsable:"), 2, 2);
+        formulario.add(txtResponsable, 3, 2);
 
-        formulario.add(new Label("Dirección:"), 2, 1);
-        formulario.add(txtDireccion, 3, 1);
-
-        formulario.add(new Label("Responsable:"), 0, 2);
-        formulario.add(txtResponsable, 1, 2);
-
-        formulario.add(new Label("Correo:"), 2, 2);
-        formulario.add(txtCorreo, 3, 2);
-
-        formulario.add(new Label("Descripción:"), 0, 3);
-        formulario.add(txtDescripcion, 1, 3, 3, 1);
-
-        for (int i = 0; i < 4; i++) {
-            formulario.getColumnConstraints().add(
-                    new javafx.scene.layout.ColumnConstraints()
-            );
-        }
-
-        GridPane.setHgrow(txtNombreOrganizacion,
-                javafx.scene.layout.Priority.ALWAYS);
-        GridPane.setHgrow(txtIdentificacionFiscal,
-                javafx.scene.layout.Priority.ALWAYS);
-        GridPane.setHgrow(txtTelefono,
-                javafx.scene.layout.Priority.ALWAYS);
-        GridPane.setHgrow(txtDireccion,
-                javafx.scene.layout.Priority.ALWAYS);
-        GridPane.setHgrow(txtResponsable,
-                javafx.scene.layout.Priority.ALWAYS);
-        GridPane.setHgrow(txtCorreo,
-                javafx.scene.layout.Priority.ALWAYS);
-        GridPane.setHgrow(txtDescripcion,
-                javafx.scene.layout.Priority.ALWAYS);
+        formulario.add(new Label("Correo electrónico:"), 0, 3);
+        formulario.add(txtCorreo, 1, 3);
+        formulario.add(new Label("Descripción:"), 2, 3);
+        formulario.add(txtDescripcion, 3, 3);
 
         contenido.getChildren().addAll(
                 titulo,
                 subtitulo,
-                botones,
-                tituloDetalle,
                 formulario,
+                botones,
                 new Label("CONSULTAS REGISTRADAS"),
                 tablaUsuarios
         );
 
         VBox.setVgrow(tablaUsuarios, javafx.scene.layout.Priority.ALWAYS);
-
         setCenter(contenido);
     }
 
-    // Crea los campos y botones
+    public void mostrarProductos(ProductoView productoView) {
+        setCenter(productoView);
+    }
+
+    public void mostrarVentas(VentaView ventaView) {
+        setCenter(ventaView);
+    }
+
     private void crearFormulario() {
         txtNombreOrganizacion = crearCampo("Nombre de la organización");
+        txtTipoDocumento = crearCampo("Ejemplo: RUC");
         txtIdentificacionFiscal = crearCampo("Identificación fiscal");
         txtTelefono = crearCampo("Teléfono");
-        txtDireccion = crearCampo("Dirección");
-        txtResponsable = crearCampo("Responsable");
+        txtDireccion = crearCampo("Dirección de la empresa");
+        txtResponsable = crearCampo("Nombre del responsable");
         txtCorreo = crearCampo("Correo electrónico");
         txtDescripcion = crearCampo("Descripción");
 
-        // Campos únicamente para visualizar los datos
-        txtNombreOrganizacion.setEditable(false);
-        txtIdentificacionFiscal.setEditable(false);
-        txtTelefono.setEditable(false);
-        txtDireccion.setEditable(false);
-        txtResponsable.setEditable(false);
-        txtCorreo.setEditable(false);
-        txtDescripcion.setEditable(false);
-
-        // Único botón de gestión
-        btnActualizar = new Button("Cambiar estado");
-
-        btnActualizar.setStyle(
-                "-fx-background-color: #063B00;" +
-                        "-fx-text-fill: white;" +
-                        "-fx-font-weight: bold;"
-        );
+        btnRegistrar = crearBotonAccion("Registrar");
+        btnActualizar = crearBotonAccion("Actualizar");
+        btnEliminar = crearBotonAccion("Eliminar");
     }
 
     private TextField crearCampo(String texto) {
         TextField campo = new TextField();
         campo.setPromptText(texto);
-        campo.setPrefWidth(180);
+        campo.setPrefWidth(190);
         return campo;
     }
 
-    // Crea las columnas de la tabla
+    private Button crearBotonAccion(String texto) {
+        Button boton = new Button(texto);
+        boton.setPrefWidth(120);
+        boton.setStyle(
+                "-fx-background-color: #063B00;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-weight: bold;"
+        );
+        return boton;
+    }
+
     private void crearTabla() {
         tablaUsuarios = new TableView<>();
         tablaUsuarios.setPrefHeight(350);
-        tablaUsuarios.setColumnResizePolicy(
-                TableView.UNCONSTRAINED_RESIZE_POLICY
-        );
 
-        TableColumn<Usuario, Integer> colId =
-                new TableColumn<>("ID");
-
-        TableColumn<Usuario, String> colOrganizacion =
-                new TableColumn<>("Organización");
-
-        TableColumn<Usuario, String> colTipoDocumento =
-                new TableColumn<>("Tipo documento");
-
-        TableColumn<Usuario, String> colIdentificacion =
-                new TableColumn<>("Identificación fiscal");
-
-        TableColumn<Usuario, String> colTelefono =
-                new TableColumn<>("Teléfono");
-
-        TableColumn<Usuario, String> colDireccion =
-                new TableColumn<>("Dirección");
-
-        TableColumn<Usuario, String> colResponsable =
-                new TableColumn<>("Responsable");
-
-        TableColumn<Usuario, String> colCorreo =
-                new TableColumn<>("Correo");
-
-        TableColumn<Usuario, String> colDescripcion =
-                new TableColumn<>("Descripción");
-
-        TableColumn<Usuario, Timestamp> colFecha =
-                new TableColumn<>("Fecha de registro");
-
-        TableColumn<Usuario, String> colEstado =
-                new TableColumn<>("Estado");
-
-        // Vincula las columnas con las propiedades de Usuario.java
-        colId.setCellValueFactory(
-                new PropertyValueFactory<>("id")
-        );
-
-        colOrganizacion.setCellValueFactory(
-                new PropertyValueFactory<>("nombreOrganizacion")
-        );
-
-        colTipoDocumento.setCellValueFactory(
-                new PropertyValueFactory<>("tipoDocumento")
-        );
-
-        colIdentificacion.setCellValueFactory(
-                new PropertyValueFactory<>("identificacionFiscal")
-        );
-
-        colTelefono.setCellValueFactory(
-                new PropertyValueFactory<>("telefono")
-        );
-
-        colDireccion.setCellValueFactory(
-                new PropertyValueFactory<>("direccion")
-        );
-
-        colResponsable.setCellValueFactory(
-                new PropertyValueFactory<>("responsable")
-        );
-
-        colCorreo.setCellValueFactory(
-                new PropertyValueFactory<>("correo")
-        );
-
-        colDescripcion.setCellValueFactory(
-                new PropertyValueFactory<>("descripcion")
-        );
-
-        colFecha.setCellValueFactory(
-                new PropertyValueFactory<>("fechaRegistro")
-        );
-
-        colEstado.setCellValueFactory(
-                new PropertyValueFactory<>("estado")
-        );
-
-        // Ancho de columnas
-        colId.setPrefWidth(55);
-        colOrganizacion.setPrefWidth(180);
-        colTipoDocumento.setPrefWidth(120);
-        colIdentificacion.setPrefWidth(150);
-        colTelefono.setPrefWidth(110);
-        colDireccion.setPrefWidth(180);
-        colResponsable.setPrefWidth(160);
-        colCorreo.setPrefWidth(190);
-        colDescripcion.setPrefWidth(220);
-        colFecha.setPrefWidth(160);
-        colEstado.setPrefWidth(110);
-
-        tablaUsuarios.getColumns().addAll(
-                colId,
-                colOrganizacion,
-                colTipoDocumento,
-                colIdentificacion,
-                colTelefono,
-                colDireccion,
-                colResponsable,
-                colCorreo,
-                colDescripcion,
-                colFecha,
-                colEstado
-        );
+        agregarColumna("ID", "id", 55);
+        agregarColumna("Organización", "nombreOrganizacion", 180);
+        agregarColumna("Tipo documento", "tipoDocumento", 120);
+        agregarColumna("Identificación fiscal", "identificacionFiscal", 150);
+        agregarColumna("Teléfono", "telefono", 110);
+        agregarColumna("Dirección", "direccion", 180);
+        agregarColumna("Responsable", "responsable", 160);
+        agregarColumna("Correo", "correo", 190);
+        agregarColumna("Descripción", "descripcion", 220);
+        agregarColumna("Fecha de registro", "fechaRegistro", 160);
+        agregarColumna("Estado", "estado", 110);
     }
 
-    // Recibe y muestra los registros obtenidos desde MySQL
+    private void agregarColumna(
+            String titulo,
+            String propiedad,
+            double ancho
+    ) {
+        TableColumn<Usuario, Object> columna = new TableColumn<>(titulo);
+        columna.setCellValueFactory(new PropertyValueFactory<>(propiedad));
+        columna.setPrefWidth(ancho);
+        tablaUsuarios.getColumns().add(columna);
+    }
+
     public void mostrarDatosUsuarios(List<Usuario> usuarios) {
         tablaUsuarios.setItems(
                 FXCollections.observableArrayList(usuarios)
         );
     }
 
-    // BOTONES
+    public void limpiarFormulario() {
+        txtNombreOrganizacion.clear();
+        txtTipoDocumento.clear();
+        txtIdentificacionFiscal.clear();
+        txtTelefono.clear();
+        txtDireccion.clear();
+        txtResponsable.clear();
+        txtCorreo.clear();
+        txtDescripcion.clear();
+    }
+
     public Button getBtnInicio() {
         return btnInicio;
     }
 
     public Button getBtnUsuarios() {
         return btnUsuarios;
+    }
+
+    public Button getBtnProductos() {
+        return btnProductos;
+    }
+
+    public Button getBtnVentas() {
+        return btnVentas;
     }
 
     public Button getBtnRegistrar() {
@@ -383,14 +283,16 @@ public class MainView extends BorderPane {
         return btnEliminar;
     }
 
-    // TABLA
     public TableView<Usuario> getTablaUsuarios() {
         return tablaUsuarios;
     }
 
-    // GETTERS
     public String getNombreOrganizacion() {
         return txtNombreOrganizacion.getText();
+    }
+
+    public String getTipoDocumento() {
+        return txtTipoDocumento.getText();
     }
 
     public String getIdentificacionFiscal() {
@@ -417,9 +319,12 @@ public class MainView extends BorderPane {
         return txtDescripcion.getText();
     }
 
-    // SETTERS
     public void setNombreOrganizacion(String valor) {
         txtNombreOrganizacion.setText(valor);
+    }
+
+    public void setTipoDocumento(String valor) {
+        txtTipoDocumento.setText(valor);
     }
 
     public void setIdentificacionFiscal(String valor) {
@@ -444,16 +349,5 @@ public class MainView extends BorderPane {
 
     public void setDescripcion(String valor) {
         txtDescripcion.setText(valor);
-    }
-
-    // LIMPIAR FORMULARIO
-    public void limpiarFormulario() {
-        txtNombreOrganizacion.clear();
-        txtIdentificacionFiscal.clear();
-        txtTelefono.clear();
-        txtDireccion.clear();
-        txtResponsable.clear();
-        txtCorreo.clear();
-        txtDescripcion.clear();
     }
 }
